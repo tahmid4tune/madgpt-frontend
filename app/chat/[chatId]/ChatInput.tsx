@@ -2,13 +2,15 @@
 
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { sendPromptToMadGPT } from "../../actions/chat";
+import { usePromptSettingsStore } from "../../stores/promptSettings";
 
 export default function ChatInput({ chatId }: { chatId: string }) {
   const [prompt, setPrompt] = useState("");
   const [isPending, startTransition] = useTransition();
-
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+  const model = usePromptSettingsStore((s) => s.model);
   const handleSubmit = () => {
     if (!prompt.trim()) return;
 
@@ -16,12 +18,22 @@ export default function ChatInput({ chatId }: { chatId: string }) {
     setPrompt("");
 
     startTransition(async () => {
-      await sendPromptToMadGPT(chatId, userMessage);
+      await sendPromptToMadGPT(chatId, userMessage, model);
+      inputRef.current?.focus();
     });
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
 
   return (
     <TextField
+      inputRef={inputRef}
       placeholder="What's on your mind...?"
       multiline
       minRows={3}
@@ -30,7 +42,7 @@ export default function ChatInput({ chatId }: { chatId: string }) {
       variant="standard"
       value={prompt}
       onChange={(e) => setPrompt(e.target.value)}
-      disabled={isPending}
+      onKeyDown={handleKeyDown}
       InputProps={{
         disableUnderline: true,
         endAdornment: (

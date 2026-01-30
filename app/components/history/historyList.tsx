@@ -1,8 +1,15 @@
 "use client";
 
-import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import {
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import { HistoryType } from "./types/historyType";
 import Link from "next/link";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 export const HistoryList = ({ history }: HistoryType) => {
   return (
@@ -12,6 +19,19 @@ export const HistoryList = ({ history }: HistoryType) => {
           key={id}
           disablePadding
           className="hover:bg-gray-700 hover:rounded-xl"
+          secondaryAction={
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={(e) => {
+                e.stopPropagation(); // VERY important
+                // handle delete here
+                console.log("delete", id);
+              }}
+            >
+              <DeleteOutlineIcon className="text-gray-400 hover:text-white" />
+            </IconButton>
+          }
         >
           <ListItemButton
             component={Link}

@@ -5,6 +5,8 @@ import MuiSetup from "./MuiSetup";
 import { Avatar, Divider } from "@mui/material";
 import NewChatButton from "./components/NewChatButton";
 import ChatHistory from "./components/history/historyData";
+import { ModelsListDropdown } from "./components/modelsDropdown";
+import { PoweredBy } from "./components/PoweredBy";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -37,7 +39,7 @@ export default function RootLayout({
                 <NewChatButton />
                 <span className="font-bold">Your Chats</span>
                 <Divider sx={{ backgroundColor: "gray" }} />
-                {<ChatHistory />}
+                <ChatHistory />
                 <div className="mt-auto rounded-xl bg-gray-700 text-white p-3 font-bold">
                   <div className="flex">
                     <Avatar sx={{ bgcolor: "pink" }} />
@@ -48,6 +50,8 @@ export default function RootLayout({
               <div className="w-5/6 flex flex-col bg-gray-950 px-5">
                 <div className="border-b-2 border-gray-900 font-bold py-5">
                   MadGPT
+                  <ModelsListDropdown />
+                  <PoweredBy />
                 </div>
                 <div className="p-5">{children}</div>
               </div>
