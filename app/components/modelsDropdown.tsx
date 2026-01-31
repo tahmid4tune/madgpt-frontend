@@ -5,20 +5,28 @@ import { useState } from "react";
 import { usePromptSettingsStore } from "../stores/promptSettings";
 
 const modelList = [
+  "llama3.1:8b",
   "openai/gpt-oss-120b",
   "meta-llama/llama-4-scout-17b-16e-instruct",
-];
+] as const;
+type Model = (typeof modelList)[number];
+const providerModelMap = {
+  "llama3.1:8b": "ollama",
+  "openai/gpt-oss-120b": "groq",
+  "meta-llama/llama-4-scout-17b-16e-instruct": "groq",
+};
 
 export const ModelsListDropdown = () => {
-  const setModel = usePromptSettingsStore((s) => s.setModel);
+  const { setModel, setProvider } = usePromptSettingsStore((s) => s);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (model?: string) => {
+  const handleClose = (model?: Model) => {
     if (model) {
       setModel(model);
+      setProvider(providerModelMap[model]);
     }
     setAnchorEl(null);
   };

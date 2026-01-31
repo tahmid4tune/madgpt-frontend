@@ -10,6 +10,7 @@ import {
 import { HistoryType } from "./types/historyType";
 import Link from "next/link";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { deleteChatHistory } from "../../actions/chat";
 
 export const HistoryList = ({ history }: HistoryType) => {
   return (
@@ -26,7 +27,7 @@ export const HistoryList = ({ history }: HistoryType) => {
               onClick={(e) => {
                 e.stopPropagation(); // VERY important
                 // handle delete here
-                console.log("delete", id);
+                deleteChatHistory(id);
               }}
             >
               <DeleteOutlineIcon className="text-gray-400 hover:text-white" />

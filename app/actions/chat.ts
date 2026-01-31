@@ -6,7 +6,8 @@ const backendUrl = process.env.MAD_GPT_BACKEND;
 export async function sendPromptToMadGPT(
   chatId: string,
   prompt: string,
-  model: string
+  model: string,
+  provider: string
 ) {
   // This is the API endpoint called when user sends message
   const res = await fetch(`${backendUrl}/chat`, {
@@ -14,7 +15,7 @@ export async function sendPromptToMadGPT(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ prompt, chatId, model }),
+    body: JSON.stringify({ prompt, chatId, model, provider }),
     cache: "no-store", // important for AI calls
   });
   if (!res.ok) {
@@ -58,5 +59,4 @@ export async function deleteChatHistory(chatId: string) {
     throw new Error("Failed to fetch");
   }
   revalidateTag("chat-history", "default");
-  return await res.json();
 }

@@ -2,37 +2,10 @@
 
 import { Box, Paper, Stack } from "@mui/material";
 import { MessagesType } from "./types/messageType";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const Messages = ({ messages }: MessagesType) => {
-  const parseStructuredMessage = (message: string) => {
-    try {
-      const messageArr = JSON.parse(message);
-
-      if (!Array.isArray(messageArr)) return message;
-
-      return (
-        <>
-          {messageArr.map((item, index) => {
-            if (item.type === "bold") {
-              return (
-                <div key={index}>
-                  <strong>{item.text}</strong>
-                </div>
-              );
-            }
-
-            return (
-              <div key={index}>
-                <span>{item.text}</span>
-              </div>
-            );
-          })}
-        </>
-      );
-    } catch (_e) {
-      return message;
-    }
-  };
   return (
     <Stack spacing={1.5} sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
       {messages.map((msg, index) => (
@@ -52,9 +25,16 @@ export const Messages = ({ messages }: MessagesType) => {
               bgcolor: msg.role === "user" ? "#FADADD" : "grey.200",
             }}
           >
-            {msg.role === "user"
-              ? msg.content
-              : parseStructuredMessage(msg.content)}
+            <pre
+              className="font-serif"
+              style={{
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                overflowWrap: "anywhere",
+              }}
+            >
+              <Markdown remarkPlugins={[remarkGfm]}>{msg.content}</Markdown>
+            </pre>
           </Paper>
         </Box>
       ))}
